@@ -1,26 +1,28 @@
 import { GetCharactersDocument, GetCharactersQuery } from "../../generated"
 import { getClient } from "../../apollo.config"
-import { Header } from "@/components/header"
-import { Card } from "@/components/card"
+import { MainScreen } from "@/screens/main"
+
+type CharactersParam = NonNullable<NonNullable<GetCharactersQuery['characters']>['results']>
+
+const formatData = (characters: CharactersParam) => {
+  const firstSixSorted = characters.sort(() => Math.random() - 0.5).filter((_, i) => i < 6)
+
+  const pairFormatted = firstSixSorted.reduce((init, val) => {
+    return [...init, val, val]
+  }, [] as CharactersParam)
+
+  return pairFormatted
+}
 
 export default async function Home() {
   const { data } = await getClient().query<GetCharactersQuery>({query: GetCharactersDocument})
 
-  console.log({ data })
+  const formattedData = data.characters?.results
+    ? formatData([...data.characters.results])
+    : data.characters?.results ?? []
+
 
   return (
-    <main className="min-h-screen bg-[#1C1D3B] flex flex-col items-center">
-      <Header />
-      <section className="md:w-[1040px] bg-[#FFFAC2] rounded mt-8 py-10 px-16">
-        <h2>Personajes</h2>
-        <div className="grid grid-cols-4 gap-4 mt-10">
-          {data.characters?.results?.map(character => (
-            <div key={character?.id}>
-              <Card key={character?.id} {...character} />
-            </div>
-          ))}
-        </div>
-      </section>
-    </main>
+    <MainScreen characters={formattedData} />
   )
 }
