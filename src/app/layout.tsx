@@ -1,3 +1,5 @@
+import { Header } from '@/components/header'
+import ContextProvider from './context'
 import './globals.css'
 import { Montserrat } from 'next/font/google'
 
@@ -16,7 +18,12 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body suppressHydrationWarning={true}  className={montserrat.className}>{children}</body>
+      <body suppressHydrationWarning={true} className={`${montserrat.className} bg-[#1C1D3B] min-h-screen`}>
+        <div className='flex w-full justify-center'>
+          <Header />
+        </div>
+        <ContextProvider>{children}</ContextProvider>
+      </body>
     </html>
   )
 }
