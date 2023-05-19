@@ -1,3 +1,5 @@
+# Rick and Morty Game
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
@@ -6,29 +8,52 @@ First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Fetching Data
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+This project uses Apollo Client to fetch the data from this [API](https://rickandmortyapi.com/graphql). The Apollo Configuration is on `apollo.config.tsx` at the root of the project.
 
-## Learn More
+Also it uses [Graphql Codegen](https://github.com/dotansimha/graphql-code-generator) to generate types from the API Schema. the configuration is on `codegen.ts`, and the output is under the `generated` directory.
 
-To learn more about Next.js, take a look at the following resources:
+This script will run codegen and generate the types.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run codegen
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+With the latest version of Nextjs and the introduction of the `app` directory, now all the components are **Server Components** by default. For the purpose of this implementation I needed to interact with **React Context**, that's why I use the directive `"use client"` in the majority of the components.
 
-## Deploy on Vercel
+## Context
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The Global Context I created has four values, these are the ones I will need to reuse in more than one page. 
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```javascript
+    cards: CharactersParam;
+	setCards: Dispatch<CharactersParam>;
+	turnsContext: number;
+	setTurnsContext: Dispatch<SetStateAction<number>>;
+```
+
+`cards`: Are the characters data formatted to show it on the grid game. This is used in the main view and the play view.
+
+`turns`: The number of turns the user played. This is used in the play view and the final view.
+
+## Styles
+
+I have used [Tailwind CSS](https://tailwindcss.com/) for the styling, I'm very familiar with this tool, and I consider it a great option for a small project. Also Nextjs provides a simple way to install it with their CLI.
+
+## Components
+
+I created only three components that I consider essential and global across the app.
+
+## Routing
+
+I'm using the routing structure from Nextjs, that now is under the `app` directory.
+
+
+## Testing
+
+For testing purposes I'm using [Testing Library](https://testing-library.com/docs/react-testing-library/intro), and I'm testing the principal components.

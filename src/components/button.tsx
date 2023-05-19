@@ -3,9 +3,14 @@ import { FC } from 'react';
 type ButtonProps = {
 	variant?: 'primary' | 'secondary';
 	text: string;
+	onClick?: () => void;
 };
 
-export const Button: FC<ButtonProps> = ({ variant = 'primary', text }) => {
+export const Button: FC<ButtonProps> = ({
+	variant = 'primary',
+	text,
+	onClick,
+}) => {
 	const className =
 		variant === 'primary'
 			? 'bg-[#A2F2F9] border-[#D8E054] '
@@ -14,6 +19,8 @@ export const Button: FC<ButtonProps> = ({ variant = 'primary', text }) => {
 	return (
 		<button
 			className={`${className} border-b-4 border-l-4 px-[80px] py-3 rounded-[8px] font-semibold capitalize text-[24px] leading-[29px] text-center`}
+			onClick={onClick}
+			data-testid="container"
 		>
 			{text}
 		</button>
