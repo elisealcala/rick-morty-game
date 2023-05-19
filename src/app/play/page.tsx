@@ -1,6 +1,7 @@
 "use client"
 
 import { useContext, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Context } from '../context'
 import { Card } from '@/components/card'
 
@@ -16,7 +17,9 @@ export default function Play() {
   const [matchingCards, setMatchingCards] = useState<CardOption[]>([])
   const [turns, setTurns] = useState(0)
   const [hits, setHits] = useState(0)
-  const { cards } = useContext(Context)
+  const { cards, setTurnsContext } = useContext(Context)
+
+  const router = useRouter()
 
   useEffect(() => {
     setTimeout(() => {
@@ -45,6 +48,13 @@ export default function Play() {
     }
     
   }, [selectedCards])
+
+  useEffect(() => {
+    if (matchingCards.length === 12) {
+      setTurnsContext(turns)
+      router.push('/congrats')
+    }
+  }, [matchingCards, router, turns, setTurnsContext])
 
   const handleClick = ({ customId, id }: CardOption) => {
     if (!selectedCards.some(({ customId }) => customId === id)) {
