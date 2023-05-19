@@ -1,28 +1,46 @@
+"use client";
+
+import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import { GetCharactersDocument, GetCharactersQuery } from "../../generated"
-import { getClient } from "../../apollo.config"
-import { MainScreen } from "@/screens/main"
+import { useContext } from "react";
+import { Context } from "./context";
+import { formatData } from "@/utils";
+import { Card } from "@/components/card";
+import Link from "next/link";
+import { Button } from "@/components/button";
 
-type CharactersParam = NonNullable<NonNullable<GetCharactersQuery['characters']>['results']>
 
-const formatData = (characters: CharactersParam) => {
-  const firstSixSorted = characters.sort(() => Math.random() - 0.5).filter((_, i) => i < 6)
+export default function Home() {
+  const { data , loading } = useQuery<GetCharactersQuery>(GetCharactersDocument)
+  const { setCards } = useContext(Context)
 
-  const pairFormatted = firstSixSorted.reduce((init, val) => {
-    return [...init, val, val]
-  }, [] as CharactersParam)
-
-  return pairFormatted
-}
-
-export default async function Home() {
-  const { data } = await getClient().query<GetCharactersQuery>({query: GetCharactersDocument})
-
-  const formattedData = data.characters?.results
+  const formattedData = data?.characters?.results
     ? formatData([...data.characters.results])
-    : data.characters?.results ?? []
+    : data?.characters?.results ?? []
 
 
   return (
-    <MainScreen characters={formattedData} />
+    <main className="flex flex-col items-center">
+      <section className="md:w-[1040px] bg-[#FFFAC2] rounded mt-8 py-10 px-16">
+        <h2>Personajes</h2>
+        <div className="grid grid-cols-4 gap-4 mt-10">
+          {loading ? (
+            Array.from(Array(12).keys()).map(i => <div key={i} className="animate-pulse h-[260px] w-full bg-slate-200" />)
+          ): formattedData?.map((character, index) => (
+            <div key={`${character?.id}-${index}`}>
+              <Card {...character} />
+            </div>
+          ))}
+        </div>
+        <Link
+          href="/play"
+          onClick={() => {
+            setCards(formattedData ? formattedData.sort(() => Math.random() - 0.5) : formattedData)
+          }}
+        >
+          <Button text="jugar" />
+        </Link>
+      </section>
+    </main>
   )
 }

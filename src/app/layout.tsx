@@ -2,6 +2,7 @@ import { Header } from '@/components/header'
 import ContextProvider from './context'
 import './globals.css'
 import { Montserrat } from 'next/font/google'
+import { ApolloWrapper } from '../../apollo.config'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
@@ -22,7 +23,9 @@ export default function RootLayout({
         <div className='flex w-full justify-center'>
           <Header />
         </div>
-        <ContextProvider>{children}</ContextProvider>
+        <ApolloWrapper>
+          <ContextProvider>{children}</ContextProvider>
+        </ApolloWrapper>
       </body>
     </html>
   )
