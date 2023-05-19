@@ -19,9 +19,9 @@ export default function Home() {
 
 	return (
 		<main className="flex flex-col items-center">
-			<section className="md:w-[1040px] bg-[#FFFAC2] rounded mt-8 py-10 px-16">
-				<h2>Personajes</h2>
-				<div className="grid grid-cols-4 gap-4 mt-10">
+			<section className="md:w-[1040px] bg-[#FFFAC2] rounded mt-8 py-10 px-16 text-center">
+				<h2 className="text-[24px] leading-[29px] font-bold">Personajes</h2>
+				<div className="grid grid-cols-4 gap-4 mt-[24px] mb-[48px]">
 					{loading
 						? Array.from(Array(12).keys()).map((i) => (
 								<div

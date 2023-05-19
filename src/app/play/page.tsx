@@ -81,12 +81,12 @@ export default function Play() {
 
 	return (
 		<main className="flex flex-col items-center">
-			<section className="md:w-[1040px] bg-[#FFFAC2] rounded mt-8 py-10 px-16">
+			<section className="w-[90%] lg:w-[1040px] bg-[#FFFAC2] rounded mt-8 py-10 px-4 md:px-16">
 				<div className="flex justify-between">
-					<p>{`Aciertos: ${hits}`}</p>
-					<p>{`Turnos: ${turns}`}</p>
+					<p className="font-bold text-[24px]">{`Aciertos: ${hits}`}</p>
+					<p className="font-bold text-[24px]">{`Turnos: ${turns}`}</p>
 				</div>
-				<div className="grid grid-cols-4 gap-4 mt-10">
+				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-[24px]">
 					{loading || cards.length === 0
 						? Array.from(Array(12).keys()).map((i) => (
 								<div

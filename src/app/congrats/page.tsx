@@ -10,7 +10,7 @@ export default function Congrats() {
 
 	return (
 		<main className="flex flex-col items-center">
-			<section className="md:w-[1040px] bg-[#FFFAC2] rounded mt-8 py-10 px-16">
+			<section className="w-[90%] lg:w-[1040px] bg-[#FFFAC2] rounded mt-8 py-10 px-4 md:px-16">
 				<div className="flex flex-col w-full items-center">
 					<h2 className="font-bold text-[32px]">¡Felicitaciones!</h2>
 					<p className="mt-4 mb-10">

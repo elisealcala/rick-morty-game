@@ -26,7 +26,7 @@ export const Card: FC<CardProps> = ({
 	return (
 		<div
 			onClick={!blocked && flipped ? onClick : () => null}
-			className={`w-full p-4 h-[260px] rounded ${className}`}
+			className={`w-full p-4 h-[260px] rounded-[8px] shadow-md ${className}`}
 		>
 			{flipped ? (
 				<div className="relative w-full h-[180px]">
