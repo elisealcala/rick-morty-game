@@ -1,46 +1,54 @@
-"use client";
+'use client';
 
-import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
-import { GetCharactersDocument, GetCharactersQuery } from "../../generated"
-import { useContext } from "react";
-import { Context } from "./context";
-import { formatData } from "@/utils";
-import { Card } from "@/components/card";
-import Link from "next/link";
-import { Button } from "@/components/button";
-
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { GetCharactersDocument, GetCharactersQuery } from '../../generated';
+import { useContext } from 'react';
+import { Context } from './context';
+import { formatData } from '@/utils';
+import { Card } from '@/components/card';
+import Link from 'next/link';
+import { Button } from '@/components/button';
 
 export default function Home() {
-  const { data , loading } = useQuery<GetCharactersQuery>(GetCharactersDocument)
-  const { setCards } = useContext(Context)
+	const { data, loading } = useQuery<GetCharactersQuery>(GetCharactersDocument);
+	const { setCards } = useContext(Context);
 
-  const formattedData = data?.characters?.results
-    ? formatData([...data.characters.results])
-    : data?.characters?.results ?? []
+	const formattedData = data?.characters?.results
+		? formatData([...data.characters.results])
+		: data?.characters?.results ?? [];
 
-
-  return (
-    <main className="flex flex-col items-center">
-      <section className="md:w-[1040px] bg-[#FFFAC2] rounded mt-8 py-10 px-16">
-        <h2>Personajes</h2>
-        <div className="grid grid-cols-4 gap-4 mt-10">
-          {loading ? (
-            Array.from(Array(12).keys()).map(i => <div key={i} className="animate-pulse h-[260px] w-full bg-slate-200" />)
-          ): formattedData?.map((character, index) => (
-            <div key={`${character?.id}-${index}`}>
-              <Card {...character} />
-            </div>
-          ))}
-        </div>
-        <Link
-          href="/play"
-          onClick={() => {
-            setCards(formattedData ? formattedData.sort(() => Math.random() - 0.5) : formattedData)
-          }}
-        >
-          <Button text="jugar" />
-        </Link>
-      </section>
-    </main>
-  )
+	return (
+		<main className="flex flex-col items-center">
+			<section className="md:w-[1040px] bg-[#FFFAC2] rounded mt-8 py-10 px-16">
+				<h2>Personajes</h2>
+				<div className="grid grid-cols-4 gap-4 mt-10">
+					{loading
+						? Array.from(Array(12).keys()).map((i) => (
+								<div
+									key={i}
+									className="animate-pulse h-[260px] w-full bg-slate-200"
+								/>
+						  ))
+						: formattedData?.map((character, index) => (
+								<div key={`${character?.id}-${index}`}>
+									<Card {...character} />
+								</div>
+						  ))}
+				</div>
+				<Link
+					href="/play"
+					scroll={false}
+					onClick={() => {
+						setCards(
+							formattedData
+								? formattedData.sort(() => Math.random() - 0.5)
+								: formattedData
+						);
+					}}
+				>
+					<Button text="jugar" />
+				</Link>
+			</section>
+		</main>
+	);
 }
