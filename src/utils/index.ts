@@ -1,6 +1,6 @@
 import { GetCharactersQuery } from '../../generated';
 
-type CharactersParam = NonNullable<
+export type CharactersParam = NonNullable<
 	NonNullable<GetCharactersQuery['characters']>['results']
 >;
 

@@ -1,9 +1,12 @@
 'use client';
 
 import { useContext, useEffect, useState } from 'react';
+import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import { Context } from '../context';
 import { Card } from '@/components/card';
+import { GetCharactersDocument, GetCharactersQuery } from '../../../generated';
+import { formatData } from '@/utils';
 
 type CardOption = {
 	customId: string;
@@ -17,15 +20,30 @@ export default function Play() {
 	const [matchingCards, setMatchingCards] = useState<CardOption[]>([]);
 	const [turns, setTurns] = useState(0);
 	const [hits, setHits] = useState(0);
-	const { cards, setTurnsContext } = useContext(Context);
+	const { cards, setTurnsContext, setCards } = useContext(Context);
+	const [getCharacters, { loading, data }] = useLazyQuery<GetCharactersQuery>(
+		GetCharactersDocument
+	);
 
 	const router = useRouter();
 
 	useEffect(() => {
-		setTimeout(() => {
-			setAllHidden(true);
-		}, 3000);
-	}, []);
+		if (cards?.length) {
+			setTimeout(() => {
+				setAllHidden(true);
+			}, 3000);
+		} else {
+			getCharacters();
+		}
+	}, [cards, getCharacters]);
+
+	useEffect(() => {
+		if (data?.characters?.results) {
+			setCards(
+				formatData([...data.characters.results]).sort(() => Math.random() - 0.5)
+			);
+		}
+	}, [data, setCards]);
 
 	useEffect(() => {
 		if (selectedCards.length === 2) {
@@ -69,37 +87,44 @@ export default function Play() {
 					<p>{`Turnos: ${turns}`}</p>
 				</div>
 				<div className="grid grid-cols-4 gap-4 mt-10">
-					{cards?.map((character, index) => {
-						const newId = `${character?.name}-${index}`;
-						const isAMatchingCard = matchingCards.some(
-							({ customId }) => customId === newId
-						);
-						const isASelectedCard = selectedCards.some(
-							({ customId }) => customId === newId
-						);
-
-						if (isAMatchingCard) {
-							return (
-								<div key={newId} className="h-[260px] w-full bg-gray-100" />
-							);
-						}
-
-						return (
-							<div key={newId}>
-								<Card
-									{...character}
-									flipped={allHidden && !isASelectedCard}
-									onClick={() => {
-										handleClick({
-											customId: newId,
-											id: character?.id ?? '',
-										});
-									}}
-									blocked={isBlocked}
+					{loading || cards.length === 0
+						? Array.from(Array(12).keys()).map((i) => (
+								<div
+									key={i}
+									className="animate-pulse h-[260px] w-full bg-slate-200"
 								/>
-							</div>
-						);
-					})}
+						  ))
+						: cards.map((character, index) => {
+								const newId = `${character?.name}-${index}`;
+								const isAMatchingCard = matchingCards.some(
+									({ customId }) => customId === newId
+								);
+								const isASelectedCard = selectedCards.some(
+									({ customId }) => customId === newId
+								);
+
+								if (isAMatchingCard) {
+									return (
+										<div key={newId} className="h-[260px] w-full bg-gray-100" />
+									);
+								}
+
+								return (
+									<div key={newId}>
+										<Card
+											{...character}
+											flipped={allHidden && !isASelectedCard}
+											onClick={() => {
+												handleClick({
+													customId: newId,
+													id: character?.id ?? '',
+												});
+											}}
+											blocked={isBlocked}
+										/>
+									</div>
+								);
+						  })}
 				</div>
 			</section>
 		</main>

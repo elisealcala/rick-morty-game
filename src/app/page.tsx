@@ -39,11 +39,9 @@ export default function Home() {
 					href="/play"
 					scroll={false}
 					onClick={() => {
-						setCards(
-							formattedData
-								? formattedData.sort(() => Math.random() - 0.5)
-								: formattedData
-						);
+						if (formattedData) {
+							setCards(formattedData.sort(() => Math.random() - 0.5));
+						}
 					}}
 				>
 					<Button text="jugar" />

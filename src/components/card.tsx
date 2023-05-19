@@ -20,13 +20,13 @@ export const Card: FC<CardProps> = ({
 	onClick,
 }) => {
 	const className = flipped
-		? 'bg-[#A2F2F9] cursor-pointer h-[260px] flex items-center'
+		? 'bg-[#A2F2F9] cursor-pointer flex items-center'
 		: 'bg-white';
 
 	return (
 		<div
 			onClick={!blocked && flipped ? onClick : () => null}
-			className={`w-full h-full p-4 rounded ${className}`}
+			className={`w-full p-4 h-[260px] rounded ${className}`}
 		>
 			{flipped ? (
 				<div className="relative w-full h-[180px]">

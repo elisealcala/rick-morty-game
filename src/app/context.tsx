@@ -2,12 +2,11 @@
 
 import { Dispatch, SetStateAction, createContext, useState } from 'react';
 import { GetCharactersQuery } from '../../generated';
+import { CharactersParam } from '@/utils';
 
 export const Context = createContext<{
-	cards: NonNullable<GetCharactersQuery['characters']>['results'];
-	setCards: Dispatch<
-		SetStateAction<NonNullable<GetCharactersQuery['characters']>['results']>
-	>;
+	cards: CharactersParam;
+	setCards: Dispatch<CharactersParam>;
 	turnsContext: number;
 	setTurnsContext: Dispatch<SetStateAction<number>>;
 }>({
@@ -22,9 +21,7 @@ export default function ContextProvider({
 }: {
 	children: React.ReactNode;
 }) {
-	const [cards, setCards] = useState<
-		NonNullable<GetCharactersQuery['characters']>['results']
-	>([]);
+	const [cards, setCards] = useState<CharactersParam>([]);
 	const [turnsContext, setTurnsContext] = useState(0);
 
 	return (
